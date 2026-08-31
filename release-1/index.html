@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Four interactive lessons on rarity, false positives, natural frequencies and ordinary incident–roster overlap.">
+  <title>The Ordinary Ward · Four-step interactive edition</title>
+  <style>
+    :root {
+      --ink: #18201d;
+      --muted: #64706b;
+      --paper: #f6f5ef;
+      --cream: #fffdf7;
+      --line: #d8dbd4;
+      --green: #285d4b;
+      --green-deep: #173c31;
+      --mint: #dceee3;
+      --butter: #f4e9bc;
+      --lilac: #e5dff0;
+      --coral: #e7866d;
+      --amber: #b47b24;
+      --red: #bd5944;
+      --ordinary: #9db8ae;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .site-header { width: min(1180px, calc(100% - 48px)); height: 82px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 15px; font-weight: 760; letter-spacing: -.02em; }
+    .brand-mark { position: relative; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; }
+    .brand-mark::before, .brand-mark::after, .brand-mark i { content: ""; position: absolute; background: var(--green); border-radius: 50%; }
+    .brand-mark::before { width: 5px; height: 5px; transform: translate(-5px, 4px); }
+    .brand-mark::after { width: 4px; height: 4px; transform: translate(6px, -5px); }
+    .brand-mark i { width: 2px; height: 12px; transform: rotate(38deg); opacity: .45; }
+    .header-note { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .header-note span { display: inline-block; margin-left: 8px; color: var(--green); }
+    .hero { width: min(910px, calc(100% - 48px)); margin: 0 auto; padding: 74px 0 64px; text-align: center; }
+    .eyebrow { margin: 0 0 18px; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .hero h1 { margin: 0; font: 500 clamp(48px, 7vw, 78px)/.98 Georgia, "Times New Roman", serif; letter-spacing: -.055em; }
+    .hero-copy { max-width: 700px; margin: 25px auto 0; color: var(--muted); font-size: 16px; line-height: 1.65; }
+    .lesson-grid { width: min(1180px, calc(100% - 48px)); margin: 0 auto 104px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .lesson-card { width: 100%; min-height: 500px; padding: 22px; display: flex; flex-direction: column; border: 1px solid rgba(24,32,29,.11); border-radius: 22px; overflow: hidden; color: inherit; font: inherit; text-align: left; transition: transform .2s ease, box-shadow .2s ease; }
+    .lesson-card:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(24,32,29,.08); }
+    .lesson-card:focus-visible { outline: 3px solid var(--coral); outline-offset: 4px; }
+    .lesson-card.is-active { box-shadow: inset 0 0 0 2px var(--green); }
+    .lesson-card.mint { background: var(--mint); }
+    .lesson-card.butter { background: var(--butter); }
+    .lesson-card.lilac { background: var(--lilac); }
+    .lesson-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .lesson-meta span:last-child { opacity: .58; }
+    .lesson-text { margin-top: auto; padding: 0 4px 3px; }
+    .lesson-text h2 { margin: 0 0 10px; font: 500 clamp(27px, 2.35vw, 32px)/1.04 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
+    .lesson-text p { min-height: 72px; margin: 0 0 24px; color: rgba(24,32,29,.68); font-size: 14px; line-height: 1.55; }
+    .card-link { display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid rgba(24,32,29,.14); font-size: 13px; font-weight: 750; }
+    .card-link b { font-size: 18px; line-height: 14px; transition: transform .2s ease; }
+    .lesson-card:hover .card-link b { transform: translateX(4px); }
+    .radar-visual, .test-visual, .people-visual { height: 185px; margin: 18px 0 8px; position: relative; }
+    .radar-visual { width: 185px; align-self: center; border: 1px solid rgba(24,32,29,.22); border-radius: 50%; overflow: hidden; }
+    .radar-visual::before, .radar-visual::after { content: ""; position: absolute; background: rgba(24,32,29,.18); }
+    .radar-visual::before { width: 1px; height: 100%; left: 50%; }
+    .radar-visual::after { width: 100%; height: 1px; top: 50%; }
+    .radar-ring { position: absolute; inset: 50%; border: 1px solid rgba(24,32,29,.18); border-radius: 50%; transform: translate(-50%,-50%); }
+    .ring-one { width: 70px; height: 70px; }
+    .ring-two { width: 140px; height: 140px; }
+    .radar-sweep { position: absolute; width: 50%; height: 1px; left: 50%; top: 50%; background: var(--green); transform: rotate(-36deg); transform-origin: left center; }
+    .radar-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgba(40,93,75,.13); }
+    .dot-plane { left: 67%; top: 25%; }
+    .dot-noise-one { left: 23%; top: 60%; opacity: .45; }
+    .dot-noise-two { left: 71%; top: 71%; opacity: .45; }
+    .test-visual { display: grid; place-items: center; }
+    .test-sheet { position: absolute; width: 118px; height: 154px; border: 1px solid rgba(24,32,29,.18); border-radius: 10px; }
+    .test-sheet.back { background: rgba(255,255,255,.4); transform: rotate(-9deg) translate(-15px,2px); }
+    .test-sheet.front { display: flex; flex-direction: column; align-items: center; background: #fffaf0; transform: rotate(4deg); box-shadow: 0 12px 24px rgba(24,32,29,.08); }
+    .test-sheet.front em { width: 42px; height: 42px; margin: 24px 0 18px; display: grid; place-items: center; border-radius: 50%; background: var(--coral); color: white; font-size: 30px; font-style: normal; }
+    .test-sheet.front b { width: 62px; height: 6px; margin: 4px; border-radius: 5px; background: rgba(24,32,29,.13); }
+    .test-pill { position: absolute; right: 28px; top: 25px; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: white; font: 600 20px Georgia,serif; }
+    .people-visual { padding: 28px 34px; display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; align-content: center; }
+    .people-visual i { aspect-ratio: 1; border: 1px solid rgba(24,32,29,.2); border-radius: 50% 50% 42% 42%; background: rgba(255,255,255,.38); }
+    .people-visual i.highlight { background: var(--coral); border-color: var(--coral); box-shadow: 0 0 0 4px rgba(231,134,109,.18); }
+    .lesson-panel-wrap { width: min(1180px, calc(100% - 48px)); margin: -72px auto 92px; scroll-margin-top: 30px; }
+    .lesson-panel-wrap:empty { display: none; }
+    .lesson-panel { position: relative; min-height: 650px; padding: 42px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 38px; border: 1px solid rgba(24,32,29,.13); border-radius: 24px; box-shadow: 0 24px 70px rgba(24,32,29,.1); }
+    .lesson-panel.mint { background: #e8f3ec; }
+    .lesson-panel.butter { background: #f8f0d4; }
+    .lesson-panel.lilac { background: #eee9f5; }
+    .panel-close { position: absolute; right: 19px; top: 17px; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(24,32,29,.15); border-radius: 50%; background: rgba(255,255,255,.42); color: var(--ink); font-size: 22px; line-height: 1; }
+    .lesson-question { padding: 12px 8px 0 2px; display: flex; flex-direction: column; }
+    .lesson-question h2 { margin: 0; font: 500 clamp(33px,3.55vw,46px)/1.04 Georgia,serif; letter-spacing: -.045em; }
+    .fact-row { margin: 30px 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .fact-row > span { min-height: 84px; padding: 13px; display: flex; flex-direction: column; gap: 7px; border: 1px solid rgba(24,32,29,.13); border-radius: 10px; background: rgba(255,255,255,.34); }
+    .fact-row small { color: var(--muted); font-size: 10px; line-height: 1.2; }
+    .fact-row b { font-size: 13px; }
+    .guess-control { margin-top: auto; }
+    .guess-control > span { margin-bottom: 14px; display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; font-weight: 750; }
+    .guess-control output { font: 500 28px Georgia,serif; }
+    .guess-control input { width: 100%; accent-color: var(--green); }
+    .reveal-button { margin-top: 20px; padding: 15px 17px; display: flex; justify-content: space-between; border: 0; border-radius: 11px; background: var(--green); color: white; font-size: 13px; font-weight: 780; }
+    .frequency-answer { min-height: 566px; padding: 28px; border: 1px solid rgba(24,32,29,.12); border-radius: 17px; background: rgba(255,253,247,.74); }
+    .story-setup { height: 100%; padding: 8px 4px 3px; display: flex; flex-direction: column; }
+    .panel-kicker { margin: 0 0 28px; color: var(--green); font-size: 10px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .story-setup > p:not(.panel-kicker) { margin: 0 0 17px; color: #46524d; font-size: 15px; line-height: 1.68; }
+    .story-prompt { margin-top: auto; padding: 22px; display: flex; flex-direction: column; gap: 12px; border-radius: 13px; background: var(--green-deep); color: white; }
+    .story-prompt strong { font: 500 23px/1.2 Georgia,serif; letter-spacing: -.02em; }
+    .story-prompt span { color: rgba(255,255,255,.67); font-size: 11px; }
+    .answer-heading > span { color: var(--green); font-size: 11px; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+    .frequency-flow { margin: 18px 0 12px; display: grid; gap: 9px; }
+    .frequency-branch { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: stretch; gap: 8px; }
+    .frequency-branch > span { min-height: 72px; padding: 11px 12px; display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: 10px; line-height: 1.25; background: #f5f5ef; }
+    .frequency-branch > span:last-child { background: #e0eee6; }
+    .frequency-branch.false > span:last-child { background: #f8e5dd; }
+    .frequency-branch strong { margin-bottom: 3px; color: var(--ink); font: 500 27px/1 Georgia,serif; }
+    .frequency-branch > b { align-self: center; color: var(--green); font-size: 16px; }
+    .alert-totals { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .alert-totals > span { min-height: 65px; padding: 11px 13px; display: flex; flex-direction: column; justify-content: center; border-radius: 10px; background: #ecece5; color: var(--muted); font-size: 10px; line-height: 1.25; }
+    .alert-totals strong { margin-bottom: 3px; color: var(--ink); font: 500 25px/1 Georgia,serif; }
+    .frequency-result { margin-top: 9px; padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; border-radius: 10px; background: var(--green-deep); color: white; }
+    .frequency-result span { max-width: 220px; color: rgba(255,255,255,.72); font-size: 11px; line-height: 1.3; }
+    .frequency-result strong { white-space: nowrap; font: 500 25px Georgia,serif; }
+    .answer-explanation { margin: 14px 0 11px; color: #46524d; font-size: 11px; line-height: 1.5; }
+    .answer-punchline { padding: 13px 14px; border: 1px solid rgba(24,32,29,.12); border-radius: 10px; background: rgba(255,255,255,.5); }
+    .answer-punchline h3 { margin: 0 0 8px; font: 500 18px/1.16 Georgia,serif; }
+    .answer-punchline p { margin: 4px 0 0; color: #46524d; font-size: 10px; line-height: 1.4; }
+    .answer-punchline p strong { color: var(--green); }
+    .study-finding { margin: 11px 0 0; padding-left: 11px; border-left: 2px solid var(--coral); color: #46524d; font-size: 11px; font-weight: 680; line-height: 1.5; }
+    .answer-footer { margin-top: 16px; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(24,32,29,.11); }
+    .answer-footer a, .answer-footer > span { color: var(--muted); font-size: 9px; }
+    .answer-footer button { padding: 0; border: 0; background: none; color: var(--green); font-size: 11px; font-weight: 800; }
+    .answer-reveal > * { animation: answer-in .42s ease both; }
+    @keyframes answer-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .ward-section { padding: 82px max(24px, calc((100% - 1180px)/2)) 92px; background: var(--green-deep); color: white; }
+    .ward-intro { display: grid; grid-template-columns: 1.12fr .88fr; gap: 72px; align-items: end; margin-bottom: 38px; }
+    .ward-intro .eyebrow { color: #9bc7b7; }
+    .ward-intro h2 { max-width: 650px; margin: 0; font: 500 clamp(42px, 5vw, 64px)/1 Georgia, "Times New Roman", serif; letter-spacing: -.045em; }
+    .ward-intro > p { max-width: 520px; margin: 0 0 6px; color: rgba(255,255,255,.68); font-size: 15px; line-height: 1.65; }
+    .workspace { display: grid; grid-template-columns: minmax(315px, .8fr) minmax(0, 1.75fr); min-height: 850px; overflow: hidden; border: 1px solid rgba(255,255,255,.15); border-radius: 24px; background: var(--cream); color: var(--ink); box-shadow: 0 30px 80px rgba(0,0,0,.18); }
+    .controls { padding: 25px; border-right: 1px solid var(--line); background: #eef0e9; }
+    .panel-heading { margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 800; }
+    .panel-heading button { padding: 0; border: 0; background: none; color: var(--muted); font-size: 12px; }
+    .control-row, .control-group { min-width: 0; margin: 0; padding: 15px 0; border: 0; border-top: 1px solid rgba(24,32,29,.1); }
+    .control-label { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .control-label b, .control-group legend { font-size: 13px; font-weight: 760; }
+    .control-label small { color: var(--muted); font-size: 11px; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; }
+    .range-ends { margin-top: 4px; display: flex; justify-content: space-between; color: #89908c; font-size: 8px; }
+    .control-group legend { width: 100%; margin: 0 0 11px; padding: 0; }
+    .segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .segmented button, .history-buttons button { min-height: 36px; padding: 7px 5px; border: 1px solid #cbd1cc; border-radius: 8px; background: white; color: var(--muted); font-size: 9px; font-weight: 780; }
+    .segmented button.active, .history-buttons button.active { border-color: var(--green); background: var(--green); color: white; }
+    .attribute { margin-bottom: 6px; padding: 9px 10px; display: grid; grid-template-columns: auto 1fr; gap: 9px; align-items: start; border: 1px solid transparent; border-radius: 9px; background: rgba(255,255,255,.46); cursor: pointer; }
+    .attribute:has(input:checked) { border-color: #b8c9c1; background: #f9fbf7; }
+    .attribute input { width: 15px; height: 15px; margin: 1px 0 0; accent-color: var(--green); }
+    .attribute span { display: flex; flex-direction: column; gap: 2px; }
+    .attribute b { font-size: 11px; }
+    .attribute small { color: var(--muted); font-size: 9px; line-height: 1.4; }
+    .weight-readout { margin: -4px 0 12px; padding: 9px 10px; display: flex; justify-content: space-between; gap: 12px; border-radius: 8px; background: #e3e7df; color: var(--muted); font-size: 9px; }
+    .weight-readout b { color: var(--green-deep); font-size: 10px; white-space: nowrap; }
+    .history-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+    .history-buttons button { font-size: 9px; }
+    .reshuffle { width: 100%; margin-top: 8px; padding: 14px 16px; display: flex; justify-content: space-between; border: 0; border-radius: 11px; background: var(--green); color: white; font-size: 12px; font-weight: 760; }
+    .run-help { margin: 8px 2px 0; color: #727c77; font-size: 9px; line-height: 1.5; }
+    .landscape { position: relative; min-width: 0; min-height: 850px; padding: 26px 28px; display: flex; flex-direction: column; background: #fffdf8; }
+    .landscape-heading { display: flex; justify-content: space-between; gap: 24px; align-items: end; }
+    .landscape-heading .eyebrow { margin-bottom: 6px; }
+    .landscape-heading h3 { margin: 0; font: 500 clamp(25px, 2.7vw, 37px)/1.05 Georgia, serif; letter-spacing: -.035em; }
+    .chart-key { display: flex; gap: 13px; color: var(--muted); font-size: 8px; white-space: nowrap; }
+    .chart-key span { display: flex; align-items: center; gap: 5px; }
+    .chart-key i { width: 9px; height: 9px; border-radius: 2px; background: var(--ordinary); }
+    .chart-key .designated { background: var(--coral); }
+    .neutral-strip { margin: 18px 0 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; border-radius: 9px; background: #f0f3ed; color: var(--muted); font-size: 10px; line-height: 1.4; }
+    .status-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #69a68f; box-shadow: 0 0 0 4px #e4f0ea; }
+    .status-dot.pending { background: #c99145; box-shadow: 0 0 0 4px #f2e7d4; }
+    .neutral-strip p { margin: 0; flex: 1; }
+    .neutral-strip > span:last-child { white-space: nowrap; }
+    .reference-key { margin: 8px 0 2px 44px; display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--muted); font-size: 16px; line-height: 1.2; }
+    .reference-key > span { display: flex; align-items: center; gap: 7px; }
+    .reference-key > span > i { width: 24px; flex: none; border-top: 2px dashed currentColor; }
+    .reference-key b { color: var(--ink); font-size: 16px; }
+    .reference-info { position: relative; }
+    .reference-info summary { width: 17px; height: 17px; display: grid; place-items: center; border: 1px solid #9ca6a1; border-radius: 50%; color: #727d78; font: 700 10px Georgia,serif; list-style: none; cursor: pointer; }
+    .reference-info summary::-webkit-details-marker { display: none; }
+    .reference-info p { position: absolute; z-index: 10; left: -8px; top: 22px; width: 330px; margin: 0; padding: 13px; border: 1px solid var(--line); border-radius: 9px; background: white; box-shadow: 0 13px 35px rgba(24,32,29,.16); color: #4f5c56; font-size: 11px; font-weight: 500; line-height: 1.55; }
+    .reference-info p strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 12px; }
+    .reference-key > span:last-child .reference-info p { right: -8px; left: auto; }
+    .mean { color: var(--green); }
+    .q95 { color: var(--amber); }
+    .q99 { color: var(--red); }
+    .chart-shell { position: relative; min-width: 0; margin-top: 9px; }
+    .chart-scroll { width: 100%; overflow-x: hidden; overflow-y: hidden; padding: 0 2px 5px; }
+    .chart { position: relative; width: 100%; min-width: 0; padding: 18px 10px 0 48px; }
+    .chart-area { position: relative; height: 360px; border-left: 1px solid #9da7a2; border-bottom: 1px solid #9da7a2; }
+    .y-title { position: absolute; left: -24px; top: 50%; color: var(--muted); font-size: 8px; font-weight: 700; transform: translateY(-50%) rotate(-90deg); white-space: nowrap; }
+    .grid-line { position: absolute; z-index: 0; left: 0; right: 0; height: 1px; border-top: 1px solid #e1e4df; }
+    .grid-line i { position: absolute; right: calc(100% + 8px); top: -6px; color: #87918c; font-size: 8px; font-style: normal; }
+    .reference-line { position: absolute; z-index: 3; left: 0; right: 0; height: 1px; border-top: 1px dashed currentColor; pointer-events: none; }
+    .reference-line b { position: absolute; padding: 2px 5px; border-radius: 4px; background: rgba(255,253,248,.92); font-size: 8px; white-space: nowrap; }
+    .reference-line.mean b { left: 8px; bottom: 3px; }
+    .reference-line.q95 b { left: 50%; top: 3px; transform: translateX(-50%); }
+    .reference-line.q99 b { right: 8px; bottom: 3px; }
+    .bars { position: absolute; z-index: 1; inset: 0 10px 0 12px; display: flex; align-items: stretch; gap: clamp(1px, .3vw, 5px); }
+    .bar-slot { position: relative; min-width: 0; flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+    .bar-value { margin-bottom: 3px; color: #66716c; font-size: 7px; font-weight: 750; line-height: 1; }
+    .bar { width: min(16px, 78%); min-height: 2px; flex: none; border-radius: 3px 3px 0 0; background: var(--ordinary); transition: height .25s ease; }
+    .bar-rank { position: absolute; top: calc(100% + 7px); color: #8a938f; font-size: 7px; }
+    .bar-slot.designated .bar { background: var(--coral); box-shadow: 0 0 0 2px rgba(231,134,109,.16); }
+    .bar-slot.designated .bar-value, .bar-slot.designated .bar-rank { color: #a84d39; font-weight: 850; }
+    .x-title { margin: 28px 0 0; color: var(--muted); font-size: 8px; text-align: center; }
+    .updating { position: absolute; z-index: 6; left: 50%; top: 47%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fffdf8; box-shadow: 0 8px 25px rgba(24,32,29,.1); color: var(--green); font-size: 8px; font-weight: 780; transform: translate(-50%, -50%); }
+    .stats { margin-top: 13px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .stats span { min-height: 65px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px; border: 1px solid var(--line); border-radius: 9px; background: #f6f7f2; }
+    .stats small { color: var(--muted); font-size: 10px; }
+    .stats b { font: 500 17px Georgia, serif; }
+    .interpretation { margin-top: 9px; padding: 14px 16px; display: flex; gap: 12px; border-radius: 11px; background: #f0eee5; }
+    .interpretation.review { background: #f5ebd5; }
+    .interpretation.rare { background: #f8e4dd; }
+    .interpretation > span { color: var(--green); }
+    .interpretation b { font-size: 12px; }
+    .interpretation p { margin: 4px 0 0; color: #59645f; font-size: 11px; line-height: 1.5; }
+    .caveat { margin: 12px 3px 0; color: #66726c; font-size: 10px; line-height: 1.55; }
+    .model { margin-top: 22px; border: 1px solid rgba(255,255,255,.17); border-radius: 14px; background: rgba(255,255,255,.05); }
+    .model summary { padding: 17px 20px; display: flex; justify-content: space-between; gap: 20px; color: white; list-style: none; cursor: pointer; }
+    .model summary::-webkit-details-marker { display: none; }
+    .model summary span { font-size: 13px; font-weight: 780; }
+    .model summary i { color: rgba(255,255,255,.55); font-size: 10px; font-style: normal; }
+    .model-content { padding: 7px 20px 22px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .model-content section { padding-top: 17px; border-top: 1px solid rgba(255,255,255,.14); }
+    .model-content small { color: #9bc7b7; font-size: 8px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .model-content h3 { margin: 7px 0; font: 500 18px Georgia, serif; }
+    .model-content p { margin: 0; color: rgba(255,255,255,.62); font-size: 10px; line-height: 1.6; }
+    .warning { grid-column: 1/-1; padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,.08); }
+    footer { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 36px 0 50px; display: flex; justify-content: space-between; gap: 24px; color: var(--muted); font-size: 10px; }
+    footer b { color: var(--ink); }
+    @media (max-width: 1000px) {
+      .lesson-grid { grid-template-columns: 1fr; }
+      .lesson-card { min-height: 340px; display: grid; grid-template-columns: .75fr 1.25fr; gap: 24px; }
+      .lesson-meta { grid-column: 1/-1; }
+      .lesson-card > :nth-child(2) { grid-column: 1; grid-row: 2; }
+      .lesson-text { grid-column: 2; grid-row: 2; align-self: end; }
+      .lesson-text p { min-height: 0; }
+      .lesson-panel { grid-template-columns: 1fr; }
+      .frequency-answer { min-height: 0; }
+      .workspace { grid-template-columns: 1fr; }
+      .controls { border-right: 0; border-bottom: 1px solid var(--line); }
+      .model-content { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 650px) {
+      .site-header, .hero, .lesson-grid, .lesson-panel-wrap { width: calc(100% - 30px); }
+      .site-header { height: 68px; }
+      .header-note { display: none; }
+      .hero { padding: 58px 0 48px; text-align: left; }
+      .lesson-grid { margin-bottom: 76px; }
+      .lesson-card { min-height: 480px; display: flex; }
+      .lesson-panel-wrap { margin-top: -45px; }
+      .lesson-panel { padding: 27px 18px 18px; gap: 24px; border-radius: 17px; }
+      .lesson-question { padding-top: 18px; }
+      .fact-row { grid-template-columns: 1fr; }
+      .fact-row > span { min-height: 58px; }
+      .frequency-answer { padding: 18px; }
+      .frequency-branch { grid-template-columns: 1fr; }
+      .frequency-branch > b { transform: rotate(90deg); }
+      .answer-footer { align-items: flex-start; flex-direction: column; }
+      .ward-section { padding: 64px 15px; }
+      .ward-intro { grid-template-columns: 1fr; gap: 25px; padding: 0 6px; }
+      .workspace { border-radius: 17px; }
+      .controls, .landscape { padding: 20px; }
+      .landscape-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .neutral-strip { flex-wrap: wrap; }
+      .neutral-strip p { min-width: calc(100% - 20px); }
+      .reference-key { margin-left: 0; }
+      .chart-area { height: 310px; }
+      .stats { grid-template-columns: 1fr; }
+      .stats span { min-height: 55px; }
+      .model-content { grid-template-columns: 1fr; }
+      footer { width: calc(100% - 30px); flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .bar { transition: none; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="The Ordinary Ward home"><span class="brand-mark" aria-hidden="true"><i></i></span><span>The Ordinary Ward</span></a>
+    <a class="header-note" href="#ward">Skip to the ward <span aria-hidden="true">↓</span></a>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <p class="eyebrow">A statistical story in four short steps</p>
+      <h1>Before the extraordinary,<br>understand the ordinary.</h1>
+      <p class="hero-copy">Rare things produce surprising false alarms. Expertise does not make us immune to the mistake. Count real events, expose the denominator, then build a ward roster and see what ordinary variation can produce.</p>
+    </section>
+
+    <section class="lesson-grid" aria-label="Three short lessons">
+      <button class="lesson-card mint" type="button" data-lesson="0">
+        <div class="lesson-meta"><span>01</span><span>Start with rarity</span></div>
+        <div class="radar-visual" aria-hidden="true"><i class="radar-ring ring-one"></i><i class="radar-ring ring-two"></i><i class="radar-sweep"></i><i class="radar-dot dot-plane"></i><i class="radar-dot dot-noise-one"></i><i class="radar-dot dot-noise-two"></i></div>
+        <div class="lesson-text"><h2>How can a 99% radar be wrong most of the time?</h2><p>A highly sensitive detector can still produce mostly false alarms when the thing it is looking for is rare.</p><span class="card-link">Explore example <b aria-hidden="true">→</b></span></div>
+      </button>
+      <button class="lesson-card butter" type="button" data-lesson="1">
+        <div class="lesson-meta"><span>02</span><span>Then try medicine</span></div>
+        <div class="test-visual" aria-hidden="true"><i class="test-sheet back"></i><i class="test-sheet front"><em>+</em><b></b><b></b></i><i class="test-pill">?</i></div>
+        <div class="lesson-text"><h2>A positive test does not mean a 99% chance of disease</h2><p>Experienced doctors have repeatedly made exactly this mistake when disease prevalence is low.</p><span class="card-link">Explore example <b aria-hidden="true">→</b></span></div>
+      </button>
+      <button class="lesson-card lilac" type="button" data-lesson="2">
+        <div class="lesson-meta"><span>03</span><span>Now count people</span></div>
+        <div class="people-visual" aria-hidden="true"><i></i><i></i><i></i><i class="highlight"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="highlight"></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lesson-text"><h2>Turn percentages into people</h2><p>Suddenly the true positives, false positives and missing denominator are visible.</p><span class="card-link">Explore example <b aria-hidden="true">→</b></span></div>
+      </button>
+    </section>
+
+    <div class="lesson-panel-wrap" id="lessonPanel"></div>
+
+    <section class="ward-section" id="ward">
+      <div class="ward-intro">
+        <div><p class="eyebrow">04 · Explore the roster</p><h2>Why might one nurse appear at the top?</h2></div>
+        <p>Build a ward, place incidents across its shifts and see how ordinary differences in workload can create a striking peak—even when every nurse is entirely innocent.</p>
+      </div>
+
+      <div class="workspace">
+        <aside class="controls" aria-label="Roster controls">
+          <div class="panel-heading"><span>Set up the ward</span><button id="reset" type="button">Reset</button></div>
+
+          <div class="control-row">
+            <div class="control-label"><b>Nurses on the roster</b><small id="nurseValue">24 nurses</small></div>
+            <input id="nurseCount" aria-label="Nurses on the roster" type="range" min="15" max="40" value="24">
+            <div class="range-ends"><span>15</span><span>40</span></div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-label"><b>Number of incidents</b><small id="incidentValue">60 incidents</small></div>
+            <input id="incidentCount" aria-label="Number of incidents" type="range" min="10" max="80" value="60">
+            <div class="range-ends"><span>10</span><span>80</span></div>
+          </div>
+
+          <fieldset class="control-group">
+            <legend>When incidents occur</legend>
+            <div class="segmented" id="patterns">
+              <button type="button" data-pattern="mixed" class="active" aria-pressed="true">Mixed</button>
+              <button type="button" data-pattern="days" aria-pressed="false">Mostly days</button>
+              <button type="button" data-pattern="nights" aria-pressed="false">Mostly nights</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="control-group">
+            <legend>The designated nurse</legend>
+            <label class="attribute"><input id="qualified" type="checkbox" checked><span><b>Complex-care qualified</b><small>More likely to be called for demanding shifts</small></span></label>
+            <label class="attribute"><input id="helper" type="checkbox" checked><span><b>Willing helper</b><small>Volunteers and covers gaps</small></span></label>
+            <label class="attribute"><input id="extraNights" type="checkbox" checked><span><b>Takes extra nights</b><small>Adds weight specifically on night shifts</small></span></label>
+          </fieldset>
+
+          <div class="control-row">
+            <div class="control-label"><b>Extra shifts &amp; call-ons</b><small id="workValue">65%</small></div>
+            <input id="extraWork" aria-label="Extra shifts and call-ons" type="range" min="0" max="100" step="5" value="65">
+            <div class="range-ends"><span>0</span><span>100</span></div>
+          </div>
+          <p class="weight-readout"><span>Current roster weighting</span><b id="weightValue">2.1× days · 3.2× nights</b></p>
+
+          <fieldset class="control-group">
+            <legend>Ward histories</legend>
+            <div class="history-buttons" id="histories">
+              <button type="button" data-histories="500" aria-pressed="false">500</button>
+              <button type="button" data-histories="1000" class="active" aria-pressed="true">1,000</button>
+              <button type="button" data-histories="5000" aria-pressed="false">5,000</button>
+              <button type="button" data-histories="10000" aria-pressed="false">10,000</button>
+            </div>
+          </fieldset>
+          <button class="reshuffle" id="reshuffle" type="button">Reshuffle this ward <span aria-hidden="true">↻</span></button>
+          <p class="run-help">Controls update automatically. Reshuffling creates a new, equally neutral fixed roster.</p>
+        </aside>
+
+        <section class="landscape">
+          <div class="landscape-heading">
+            <div><p class="eyebrow">One history from the batch</p><h3>Incidents attended by each nurse</h3></div>
+            <div class="chart-key"><span><i></i>Other nurses</span><span><i class="designated"></i>Designated nurse</span></div>
+          </div>
+          <div class="neutral-strip"><i class="status-dot" id="statusDot"></i><p id="statusText">All 1,000 histories assume every nurse is innocent.</p><span id="teamText">730 fixed shifts</span></div>
+          <div class="reference-key" aria-label="Neutral reference lines">
+            <span class="mean"><i></i>Typical highest <b id="meanKey">—</b><details class="reference-info"><summary aria-label="About the typical highest line">i</summary><p><strong>Typical highest</strong>Each neutral history has a most-exposed nurse. This line is the average of those highest counts: the centre of ordinary ward peaks, not the average for an individual nurse.</p></details></span>
+            <span class="q95"><i></i>95% threshold <b id="q95Key">—</b><details class="reference-info"><summary aria-label="About the 95% threshold">i</summary><p><strong>95% threshold</strong>In 95% of neutral histories, even the most-exposed nurse was at or below this count. Roughly one history in twenty produced a higher maximum.</p></details></span>
+            <span class="q99"><i></i>99% threshold <b id="q99Key">—</b><details class="reference-info"><summary aria-label="About the 99% threshold">i</summary><p><strong>99% threshold</strong>In 99% of neutral histories, even the most-exposed nurse was at or below this count. Roughly one history in one hundred produced a higher maximum.</p></details></span>
+          </div>
+
+          <div class="chart-shell">
+            <div class="chart-scroll">
+              <div class="chart" id="chart" role="img" aria-label="Ranked incident overlap bar chart">
+                <span class="y-title">Incident-shift overlaps</span>
+                <div class="chart-area" id="chartArea"></div>
+                <p class="x-title">Nurses ranked by overlap · lowest → highest</p>
+              </div>
+            </div>
+            <span class="updating" id="updating" hidden>Updating ward histories…</span>
+          </div>
+
+          <div class="stats" aria-live="polite">
+            <span><small>Designated nurse</small><b id="designatedStat">—</b></span>
+            <span><small>Position in this history</small><b id="rankStat">—</b></span>
+            <span><small>Shifts worked</small><b id="shiftStat">—</b></span>
+          </div>
+          <div class="interpretation" id="interpretation"><span aria-hidden="true">↳</span><div><b id="interpretationLabel">Preparing the ward</b><p id="interpretationText">The neutral histories are being generated.</p></div></div>
+          <p class="caveat">The bars count opportunities to be present, not mistakes, harm or culpability. A high overlap can identify whom the roster exposed most; it cannot identify why an incident occurred.</p>
+        </section>
+      </div>
+
+      <details class="model">
+        <summary><span>How this roster model works</span><i>The mechanics, in plain English</i></summary>
+        <div class="model-content">
+          <section><small>1 · Build once</small><h3>A fixed two-year roster</h3><p>The model creates 730 shifts. Day and night team sizes scale from 10-day / 5-night staffing in a 38-nurse ward.</p></section>
+          <section><small>2 · Allow real differences</small><h3>Workloads are unequal</h3><p>Each nurse receives a Beta-shaped relative workload normalized around the ward average, with separate day/night preferences.</p></section>
+          <section><small>3 · Replay the ward</small><h3>Incidents move</h3><p>Each history places incidents on distinct shifts. The chart shows one history; the lines summarize the highest overlap across the batch.</p></section>
+          <section><small>4 · Add benign exposure</small><h3>The slider bends upward</h3><p>The designated nurse starts at the ward average. Qualifications, helping and nights then multiply call-on weight nonlinearly.</p></section>
+          <p class="warning"><b>For teaching, not clinical or legal inference.</b> The simulation contains no wrongdoing mechanism and cannot evaluate a named ward, incident or person.</p>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer><b>The Ordinary Ward · Complete standalone edition</b><span>Establish what an ordinary roster can produce before reaching for an extraordinary cause.</span></footer>
+
+  <script>
+    'use strict';
+    const LESSONS = [
+      {
+        number: '01', accent: 'mint', question: 'A radar reports a possible aircraft. How likely is there really one there?',
+        facts: [['Planes are actually present','5% of scans'],['If a plane is there','Detected 99% of the time'],['If the sky is empty','Alerts 10% of the time']],
+        setup: ['Imagine a radar station watching the same patch of sky all day.','Most of the time there is nothing there. On only 5% of scans is an aircraft actually present. The radar is excellent at spotting one when it is there, but even with an empty sky it sometimes produces a false alert.'],
+        prompt: 'The radar has just reported an aircraft. How confident should you now be that there really is one?',
+        answer: 'About 34%', population: 1000, populationLabel: 'scans', condition: 50, conditionLabel: 'contain a plane', trueAlerts: 49, trueLabel: 'trigger the radar', falseAlerts: 95, noConditionLabel: 'contain no plane', falseLabel: 'trigger a false alarm', totalAlerts: 144, totalLabel: 'radar alerts altogether', realLabel: 'are real',
+        explanation: 'The radar is excellent at detecting planes. But empty skies are much more common, so false alarms outnumber genuine alerts.',
+        punchline: 'The 99% figure answers the wrong question.', comparisons: [['99%','is the chance of an alert given that a plane is there.'],['34%','is the chance of a plane given that an alert has occurred.']]
+      },
+      {
+        number: '02', accent: 'butter', question: 'A patient tests positive. What is the chance they really have the disease?',
+        facts: [['Disease prevalence','1 in 1,000'],['Cases detected','All cases'],['False positive','5%']],
+        setup: ['Imagine a clinician using a test for a disease that affects only one person in every 1,000.','The test catches every real case. But among people without the disease, 5% still receive a positive result.'],
+        prompt: 'Your patient has tested positive. How likely is it that they really have the disease?',
+        answer: 'About 2%', population: 1000, populationLabel: 'people', condition: 1, conditionLabel: 'has the disease', trueAlerts: 1, trueLabel: 'tests positive', falseAlerts: 50, noConditionLabel: 'do not have the disease', falseLabel: 'test positive anyway', totalAlerts: 51, totalLabel: 'positive results altogether', realLabel: 'comes from the person with the disease',
+        explanation: 'Only one person in the group has the disease. Around fifty people without it still test positive, so one positive result carries far less certainty than it seems.',
+        punchline: 'Test accuracy answers a different question.', comparisons: [['100%','is the chance of a positive result given that the disease is present.'],['2%','is the chance of disease given that a positive result has occurred.']],
+        study: 'In the published study, only 18% answered correctly; the most common answer was 95%.', sourceLabel: 'Casscells, Schoenberger & Graboys, 1978', sourceUrl: 'https://doi.org/10.1056/NEJM197811022991808'
+      },
+      {
+        number: '03', accent: 'lilac', question: 'A woman has a positive mammogram. What is the chance she has breast cancer?',
+        facts: [['Breast cancer','1%'],['Cancer detected','80%'],['False positive','9.6%']],
+        setup: ['Imagine women attending routine screening. About 1% have breast cancer. Mammography detects 80% of those cancers.','Among women without cancer, 9.6% still receive a positive result. The percentages are accurate—but difficult to combine in your head.'],
+        prompt: 'A woman receives a positive mammogram. How likely is it that she has breast cancer?',
+        answer: 'About 8%', population: 1000, populationLabel: 'women', condition: 10, conditionLabel: 'have breast cancer', trueAlerts: 8, trueLabel: 'receive a positive result', falseAlerts: 95, noConditionLabel: 'do not have breast cancer', falseLabel: 'receive a positive result', totalAlerts: 103, totalLabel: 'positive mammograms altogether', realLabel: 'come from women with cancer',
+        explanation: 'Out of 1,000 women, about eight with cancer test positive—and about ninety-five without cancer also test positive. Natural counts make the denominator visible.',
+        punchline: 'Making the denominator visible changes the problem.', comparisons: [['80%','is the chance of detection given that cancer is present.'],['8%','is the chance of cancer given that a positive result has occurred.']],
+        study: 'Across four diagnostic problems, physicians solved 10% correctly in probability format and 46% when shown natural frequencies.', sourceLabel: 'Hoffrage & Gigerenzer, 1998', sourceUrl: 'https://pubmed.ncbi.nlm.nih.gov/9609869/'
+      }
+    ];
+    let activeLesson = -1, lessonGuess = 50, lessonRevealed = false;
+    const lessonPanel = document.getElementById('lessonPanel');
+    const lessonCards = [...document.querySelectorAll('[data-lesson]')];
+    function lessonSetup(lesson) {
+      return `<div class="story-setup"><p class="panel-kicker">The situation</p>${lesson.setup.map(text => `<p>${text}</p>`).join('')}<div class="story-prompt"><strong>${lesson.prompt}</strong><span>Make your estimate before revealing the answer.</span></div></div>`;
+    }
+    function lessonAnswer(lesson) {
+      const source = lesson.sourceUrl ? `<a href="${lesson.sourceUrl}" target="_blank" rel="noreferrer">Source: ${lesson.sourceLabel} ↗</a>` : '<span>Fictional teaching example</span>';
+      return `<div class="answer-reveal"><div class="answer-heading"><span>Out of ${lesson.population.toLocaleString()} ${lesson.populationLabel}…</span></div><div class="frequency-flow"><div class="frequency-branch genuine"><span><strong>${lesson.condition}</strong>${lesson.conditionLabel}</span><b aria-hidden="true">→</b><span><strong>${lesson.trueAlerts}</strong>${lesson.trueLabel}</span></div><div class="frequency-branch false"><span><strong>${lesson.population - lesson.condition}</strong>${lesson.noConditionLabel}</span><b aria-hidden="true">→</b><span><strong>${lesson.falseAlerts}</strong>${lesson.falseLabel}</span></div></div><div class="alert-totals"><span><strong>${lesson.totalAlerts}</strong>${lesson.totalLabel}</span><span><strong>${lesson.trueAlerts}</strong>${lesson.realLabel}</span></div><div class="frequency-result"><span>Chance the positive signal is real</span><strong>${lesson.answer}</strong></div><p class="answer-explanation">${lesson.explanation}</p><div class="answer-punchline"><h3>${lesson.punchline}</h3>${lesson.comparisons.map(item => `<p><strong>${item[0]}</strong> ${item[1]}</p>`).join('')}</div>${lesson.study ? `<p class="study-finding">${lesson.study}</p>` : ''}<div class="answer-footer">${source}<button id="nextLesson" type="button">${activeLesson === LESSONS.length - 1 ? 'Explore the ward' : 'Next example'} <span aria-hidden="true">→</span></button></div></div>`;
+    }
+    function renderLesson() {
+      if (activeLesson < 0) { lessonPanel.replaceChildren(); lessonCards.forEach(card => card.classList.remove('is-active')); return; }
+      const lesson = LESSONS[activeLesson];
+      lessonCards.forEach((card,index) => card.classList.toggle('is-active', index === activeLesson));
+      lessonPanel.innerHTML = `<article class="lesson-panel ${lesson.accent}"><button class="panel-close" id="closeLesson" type="button" aria-label="Close example">×</button><div class="lesson-question"><p class="eyebrow">Example ${lesson.number}</p><h2>${lesson.question}</h2><div class="fact-row">${lesson.facts.map(fact => `<span><small>${fact[0]}</small><b>${fact[1]}</b></span>`).join('')}</div><label class="guess-control"><span>Your estimate <output id="guessOutput">${lessonGuess}%</output></span><input id="lessonGuess" type="range" min="0" max="100" value="${lessonGuess}"></label><button class="reveal-button" id="revealLesson" type="button">${lessonRevealed ? 'Show the setup again' : 'Show me the answer'} <span aria-hidden="true">→</span></button></div><div class="frequency-answer" aria-live="polite">${lessonRevealed ? lessonAnswer(lesson) : lessonSetup(lesson)}</div></article>`;
+      document.getElementById('closeLesson').addEventListener('click', () => { activeLesson = -1; renderLesson(); });
+      document.getElementById('lessonGuess').addEventListener('input', event => { lessonGuess = Number(event.target.value); document.getElementById('guessOutput').textContent = `${lessonGuess}%`; });
+      document.getElementById('revealLesson').addEventListener('click', () => { lessonRevealed = !lessonRevealed; renderLesson(); });
+      const next = document.getElementById('nextLesson');
+      if (next) next.addEventListener('click', () => { if (activeLesson < LESSONS.length - 1) openLesson(activeLesson + 1); else { activeLesson = -1; renderLesson(); document.getElementById('ward').scrollIntoView({ behavior: 'smooth' }); } });
+    }
+    function openLesson(index) { activeLesson = index; lessonGuess = 50; lessonRevealed = false; renderLesson(); setTimeout(() => lessonPanel.scrollIntoView({ behavior: 'smooth', block: 'center' }), 30); }
+    lessonCards.forEach((card,index) => card.addEventListener('click', () => openLesson(index)));
+
+    const DEFAULTS = { nurseCount: 24, incidents: 60, pattern: 'mixed', extraWork: 65, qualified: true, helper: true, extraNights: true, histories: 1000 };
+    const SHIFT_COUNT = 730, DAY_FRACTION = .5, BETA_A = 3.2, BETA_B = 17.25, CONCENTRATION = 8;
+    let settings = { ...DEFAULTS }, seed = 271828, timer = 0;
+
+    function mulberry32(value) {
+      let state = value >>> 0;
+      return () => { state += 0x6d2b79f5; let x = state; x = Math.imul(x ^ x >>> 15, x | 1); x ^= x + Math.imul(x ^ x >>> 7, x | 61); return ((x ^ x >>> 14) >>> 0) / 4294967296; };
+    }
+    function normal(rng) { const u = Math.max(rng(), Number.EPSILON), v = Math.max(rng(), Number.EPSILON); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+    function gamma(shape, rng) {
+      if (shape < 1) return gamma(shape + 1, rng) * Math.pow(rng(), 1 / shape);
+      const d = shape - 1 / 3, c = 1 / Math.sqrt(9 * d);
+      while (true) { let x = 0, v = 0; do { x = normal(rng); v = 1 + c * x; } while (v <= 0); v = v * v * v; const u = rng(); if (u < 1 - .0331 * x ** 4 || Math.log(u) < .5 * x * x + d * (1 - v + Math.log(v))) return d * v; }
+    }
+    function beta(a, b, rng) { const x = gamma(a, rng), y = gamma(b, rng); return x / (x + y); }
+    function normalize(values) { let total = 0; for (const value of values) total += value; const mean = total / values.length || 1; for (let i = 0; i < values.length; i++) values[i] /= mean; return values; }
+    function multipliers(s) { const effort = Math.max(0, Math.min(1, s.extraWork / 100)), curve = effort ** 2.2, availability = 1 + .2 * effort + .8 * curve, qualification = s.qualified ? 1.16 : 1, helping = s.helper ? 1.12 + .36 * curve : 1, day = availability * qualification * helping; return { day, night: Math.min(5, day * (s.extraNights ? 1.25 + .7 * curve : 1)) }; }
+    function weightedTeam(weights, size, rng, scratch) {
+      let total = 0; for (let i = 0; i < weights.length; i++) { scratch[i] = weights[i]; total += weights[i]; }
+      const team = new Uint8Array(size);
+      for (let slot = 0; slot < size; slot++) { let draw = rng() * total, chosen = weights.length - 1; for (let nurse = 0; nurse < scratch.length; nurse++) { if (scratch[nurse] <= 0) continue; draw -= scratch[nurse]; if (draw <= 0) { chosen = nurse; break; } } team[slot] = chosen; total -= scratch[chosen]; scratch[chosen] = 0; }
+      return team;
+    }
+    function higherQuantile(sorted, p) { return sorted[Math.max(0, Math.ceil(p * sorted.length) - 1)]; }
+    function simulate(s, randomSeed) {
+      const nurseCount = Math.max(15, Math.min(40, Math.round(s.nurseCount))), incidentCount = Math.max(1, Math.min(80, Math.round(s.incidents))), histories = Math.max(100, Math.min(10000, Math.round(s.histories))), rng = mulberry32(randomSeed), boost = multipliers(s);
+      const overall = new Float64Array(nurseCount), dayShares = new Float64Array(nurseCount);
+      for (let nurse = 0; nurse < nurseCount; nurse++) { overall[nurse] = beta(BETA_A, BETA_B, rng); dayShares[nurse] = beta(DAY_FRACTION * CONCENTRATION, (1 - DAY_FRACTION) * CONCENTRATION, rng); }
+      normalize(overall); overall[0] = 1; dayShares[0] = DAY_FRACTION; normalize(overall);
+      const dayWeights = new Float64Array(nurseCount), nightWeights = new Float64Array(nurseCount);
+      for (let nurse = 0; nurse < nurseCount; nurse++) { dayWeights[nurse] = overall[nurse] * dayShares[nurse] / DAY_FRACTION; nightWeights[nurse] = overall[nurse] * (1 - dayShares[nurse]) / (1 - DAY_FRACTION); }
+      dayWeights[0] *= boost.day; nightWeights[0] *= boost.night; normalize(dayWeights); normalize(nightWeights);
+      const dayTeam = Math.max(2, Math.min(nurseCount, Math.round(10 / 38 * nurseCount))), nightTeam = Math.max(2, Math.min(nurseCount, Math.round(5 / 38 * nurseCount))), scratch = new Float64Array(nurseCount), teams = new Array(SHIFT_COUNT), dayShifts = [], nightShifts = [], shiftTotals = new Uint16Array(nurseCount);
+      for (let shift = 0; shift < SHIFT_COUNT; shift++) { const isDay = shift < SHIFT_COUNT * DAY_FRACTION, team = weightedTeam(isDay ? dayWeights : nightWeights, isDay ? dayTeam : nightTeam, rng, scratch); teams[shift] = team; (isDay ? dayShifts : nightShifts).push(shift); for (const nurse of team) shiftTotals[nurse]++; }
+      const maxima = new Array(histories), used = new Uint8Array(SHIFT_COUNT), overlaps = new Uint16Array(nurseCount), example = new Uint16Array(nurseCount), dayProbability = s.pattern === 'days' ? .78 : s.pattern === 'nights' ? .22 : .5;
+      for (let history = 0; history < histories; history++) { overlaps.fill(0); used.fill(0); for (let incident = 0; incident < incidentCount; incident++) { const pool = rng() < dayProbability ? dayShifts : nightShifts; let shift = pool[Math.floor(rng() * pool.length)]; while (used[shift]) shift = pool[Math.floor(rng() * pool.length)]; used[shift] = 1; for (const nurse of teams[shift]) overlaps[nurse]++; } let maximum = 0; for (let nurse = 0; nurse < nurseCount; nurse++) maximum = Math.max(maximum, overlaps[nurse]); maxima[history] = maximum; if (history === 0) example.set(overlaps); }
+      const sorted = [...maxima].sort((a, b) => a - b), meanMaximum = maxima.reduce((sum, value) => sum + value, 0) / histories, q95 = higherQuantile(sorted, .95), q99 = higherQuantile(sorted, .99), designatedCount = example[0], chance = maxima.filter(value => value >= designatedCount).length / histories, ranked = Array.from(example, (incidents, nurseId) => ({ incidents, nurseId, designated: nurseId === 0 })).sort((a, b) => a.incidents - b.incidents || Number(a.designated) - Number(b.designated) || a.nurseId - b.nurseId), rank = ranked.findIndex(nurse => nurse.designated) + 1, averageShifts = shiftTotals.reduce((sum, value) => sum + value, 0) / nurseCount;
+      return { ranked, designatedCount, rank, shiftRatio: shiftTotals[0] / averageShifts, meanMaximum, q95, q99, chance, exampleMaximum: Math.max(...example), dayTeam, nightTeam, histories, boost };
+    }
+
+    const byId = id => document.getElementById(id);
+    function syncControls() {
+      byId('nurseCount').value = settings.nurseCount; byId('nurseValue').textContent = `${settings.nurseCount} nurses`;
+      byId('incidentCount').value = settings.incidents; byId('incidentValue').textContent = `${settings.incidents} incidents`;
+      byId('extraWork').value = settings.extraWork; byId('workValue').textContent = `${settings.extraWork}%`;
+      byId('qualified').checked = settings.qualified; byId('helper').checked = settings.helper; byId('extraNights').checked = settings.extraNights;
+      document.querySelectorAll('[data-pattern]').forEach(button => { const active = button.dataset.pattern === settings.pattern; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); });
+      document.querySelectorAll('[data-histories]').forEach(button => { const active = Number(button.dataset.histories) === settings.histories; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); });
+    }
+    function position(value, axisMax) { return `${value / axisMax * 100}%`; }
+    function render(result) {
+      const axisMax = Math.max(5, Math.ceil(Math.max(result.exampleMaximum, result.q99) * 1.14)), chartArea = byId('chartArea');
+      chartArea.replaceChildren();
+      [...new Set(Array.from({ length: 5 }, (_, index) => Math.round(axisMax * index / 4)))].forEach(tick => { const line = document.createElement('span'); line.className = 'grid-line'; line.style.bottom = position(tick, axisMax); line.innerHTML = `<i>${tick}</i>`; chartArea.append(line); });
+      [['mean', result.meanMaximum, `Typical highest · ${result.meanMaximum.toFixed(1)}`], ['q95', result.q95, `95% · ${result.q95}`], ['q99', result.q99, `99% · ${result.q99}`]].forEach(([kind, value, label]) => { const line = document.createElement('span'); line.className = `reference-line ${kind}`; line.style.bottom = position(value, axisMax); line.innerHTML = `<b>${label}</b>`; chartArea.append(line); });
+      const bars = document.createElement('div'); bars.className = 'bars';
+      result.ranked.forEach((nurse, index) => { const slot = document.createElement('div'); slot.className = `bar-slot${nurse.designated ? ' designated' : ''}`; slot.title = `${nurse.designated ? 'Designated nurse' : `Nurse ${String(nurse.nurseId + 1).padStart(2, '0')}`}: ${nurse.incidents} overlaps`; slot.innerHTML = `<span class="bar-value">${nurse.incidents}</span><i class="bar" style="height:${Math.max(1.5, nurse.incidents / axisMax * 100)}%"></i><span class="bar-rank">${nurse.designated ? 'D' : index + 1}</span>`; bars.append(slot); });
+      chartArea.append(bars);
+      const chanceText = result.chance >= .999 ? 'Almost every neutral history' : `${Math.round(result.chance * 100)}% of neutral histories`;
+      let label, text, tone = '';
+      if (result.designatedCount <= result.meanMaximum) { label = 'Within the ordinary centre'; text = 'This overlap is no higher than the typical ward maximum.'; }
+      else if (result.designatedCount <= result.q95) { label = 'Elevated, still expected'; text = 'The peak is above the typical maximum but remains inside the range reached in 95% of neutral histories.'; }
+      else if (result.designatedCount <= result.q99) { label = 'Unusual, not explanatory'; text = 'The count sits in the upper neutral tail. That makes it unusual, but does not tell us why it occurred.'; tone = 'review'; }
+      else { label = 'Beyond this batch’s 99% line'; text = 'This is rare under the current assumptions. Rarity is a prompt to check the model and roster—not a conclusion about cause.'; tone = 'rare'; }
+      byId('interpretation').className = `interpretation ${tone}`; byId('interpretationLabel').textContent = label; byId('interpretationText').textContent = `${text} ${chanceText} produced some nurse with at least this many overlaps.`;
+      byId('meanKey').textContent = result.meanMaximum.toFixed(1); byId('q95Key').textContent = result.q95; byId('q99Key').textContent = result.q99;
+      byId('designatedStat').textContent = `${result.designatedCount} incidents`; byId('rankStat').textContent = `${result.rank} of ${result.ranked.length}`; byId('shiftStat').textContent = `${result.shiftRatio.toFixed(1)}× ward average`;
+      byId('weightValue').textContent = `${result.boost.day.toFixed(1)}× days · ${result.boost.night.toFixed(1)}× nights`;
+      byId('statusText').textContent = `All ${result.histories.toLocaleString()} histories assume every nurse is innocent.`; byId('teamText').textContent = `730 fixed shifts · teams of ${result.dayTeam} day / ${result.nightTeam} night`;
+      byId('chart').setAttribute('aria-label', `${result.ranked.length} nurses ordered from lowest to highest overlap. The designated nurse attended ${result.designatedCount} incident shifts and ranks ${result.rank} of ${result.ranked.length}.`);
+      byId('statusDot').classList.remove('pending'); byId('updating').hidden = true;
+    }
+    function schedule() {
+      clearTimeout(timer); syncControls(); byId('statusDot').classList.add('pending'); byId('updating').hidden = false; byId('statusText').textContent = `Exploring ${settings.histories.toLocaleString()} neutral ward histories…`;
+      timer = setTimeout(() => render(simulate(settings, seed)), 90);
+    }
+    byId('nurseCount').addEventListener('input', event => { settings.nurseCount = Number(event.target.value); schedule(); });
+    byId('incidentCount').addEventListener('input', event => { settings.incidents = Number(event.target.value); schedule(); });
+    byId('extraWork').addEventListener('input', event => { settings.extraWork = Number(event.target.value); schedule(); });
+    ['qualified', 'helper', 'extraNights'].forEach(id => byId(id).addEventListener('change', event => { settings[id] = event.target.checked; schedule(); }));
+    document.querySelectorAll('[data-pattern]').forEach(button => button.addEventListener('click', () => { settings.pattern = button.dataset.pattern; schedule(); }));
+    document.querySelectorAll('[data-histories]').forEach(button => button.addEventListener('click', () => { settings.histories = Number(button.dataset.histories); schedule(); }));
+    byId('reshuffle').addEventListener('click', () => { seed += 101; schedule(); });
+    byId('reset').addEventListener('click', () => { settings = { ...DEFAULTS }; seed = 271828; schedule(); });
+    schedule();
+  </script>
+</body>
+</html>
